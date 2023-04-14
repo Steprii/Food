@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         if (target && target.classList.contains('tabheader__item') ) {
             tabs.forEach((item, i) => {
-                if (target == item) {
+                if (target === item) {
                     hideTabContent();
                     showTabContent(i);
                 }
@@ -37,33 +37,31 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // Timer
 
-    const deadline = '2023-04-06';
-
-    function getTimeRemaining(endTime) {
-        const t = Date.parse(endTime) - new Date(),
+    const deadline = '2023-04-20'
+    function getTimeRemaining (deadline) {
+        const t = Date.parse(deadline) - new Date(),
               days = Math.floor(t / (1000 * 60 * 60 * 24)),
               hours = Math.floor((t / (1000 * 60 * 60) % 24)),
-              minutes = Math.floor((t / 1000 / 60) % 60),
+              minutes = Math.floor((t / 1000 / 60) % 24),
               seconds = Math.floor((t / 1000) % 60);
-
         return {
-          'total': t,
-          'days': days,
-          'hours': hours,
-          'minutes': minutes,
-          'seconds': seconds
-        };
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        }
     }
 
-    function getZero(num) {
-        if (num > 0 && num < 10) {
+    function getZero (num) {
+        if (num >= 0 && num < 10) {
             return `0${num}`;
         } else {
             return num;
         }
     }
 
-    function setClock(selector, endTime) {
+    function setCock (selector, endTime) {
         const timer = document.querySelector(selector),
               days = timer.querySelector('#days'),
               hours = timer.querySelector('#hours'),
@@ -71,23 +69,57 @@ window.addEventListener('DOMContentLoaded', () => {
               seconds = timer.querySelector('#seconds'),
               timeInterval = setInterval(updateClock, 1000);
 
-        updateClock();
+            updateClock();
 
         function updateClock() {
             const t = getTimeRemaining(endTime);
 
-            days.innerHTML = getZero(t.days);
-            hours.innerHTML = getZero(t.hours);
-            minutes.innerHTML = getZero(t.minutes);
-            seconds.innerHTML = getZero(t.seconds) ;
+             days.innerHTML = getZero(t.days);
+             hours.innerHTML = getZero(t.hours);
+             minutes.innerHTML = getZero(t.minutes);
+             seconds.innerHTML = getZero(t.seconds);
 
-            if(t.total <= 0) {
-                clearInterval(timeInterval);
-            }
+             if (t.total <= 0) {
+                 clearInterval(timeInterval);
+             }
         }
     }
+    setCock('.timer', deadline);
 
-    setClock('.timer', deadline);
+    // Modal
+
+    const  modalTrigger = document.querySelectorAll('[data-modal]'),
+           modal = document.querySelector('.modal'),
+           modalCloseBtn = document.querySelector('[data-close]');
+
+
+    modalTrigger.forEach(item => {
+        item.addEventListener('click', (e) => {
+            modal.classList.add('show');
+            modal.classList.remove('hide');
+            document.body.style.overflow = "hidden";
+        })
+    });
+
+    function closeModal () {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow = "";
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal ();
+        }
+    })
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.classList.contains('show')) {
+            closeModal ();
+        }
+    })
 });
 
 
