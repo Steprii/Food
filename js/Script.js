@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // Timer
 
-    const deadline = '2023-04-20'
+    const deadline = '2023-07-20'
     function getTimeRemaining (deadline) {
         const t = Date.parse(deadline) - new Date(),
               days = Math.floor(t / (1000 * 60 * 60 * 24)),
@@ -94,12 +94,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     modalTrigger.forEach(item => {
-        item.addEventListener('click', (e) => {
-            modal.classList.add('show');
-            modal.classList.remove('hide');
-            document.body.style.overflow = "hidden";
+        item.addEventListener('click', () => {
+            openModal();
         })
     });
+
+    function openModal () {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow = "hidden";
+        clearInterval(modalTimeId);
+    }
 
     function closeModal () {
         modal.classList.add('hide');
@@ -120,7 +125,24 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal ();
         }
     })
+
+    const modalTimeId = setTimeout(openModal, 5000);
+
+    function showModalByScroll() {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.
+            documentElement.scrollHeight) {
+            openModal();
+            window.removeEventListener('scroll',showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll',showModalByScroll);
 });
+
+
+
+
+
 
 
 
